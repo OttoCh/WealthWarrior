@@ -38,7 +38,10 @@ public class Player_Interract : MonoBehaviour {
             if(InterractExist)
             {
                 Player_Move playerMove = gameObject.GetComponent<Player_Move>();
-                playerMove.changeAnimCond(2);
+                //playerMove.changeAnimCond(2);
+                playerMove.changeanimcond(2);
+                playerMove.beginInterractOrAttack(1);
+                playerMove.startCoroutine();
             }
         }
     }
@@ -59,7 +62,8 @@ public class Player_Interract : MonoBehaviour {
             if (AttackExist)
             {
                 Player_Move playerMove = gameObject.GetComponent<Player_Move>();
-                playerMove.changeAnimCond(1);
+                //playerMove.changeAnimCond(1);
+                playerMove.changeanimcond(1);
             }
         }
     }

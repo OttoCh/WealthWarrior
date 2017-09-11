@@ -8,4 +8,4 @@ a 2D android game about money and investment. It got 2 different gameplay, actio
 ![Screenshoot 2](https://github.com/OttoCh/WealthWarrior/blob/master/2.png)
 ![Screenshoot 3](https://github.com/OttoCh/WealthWarrior/blob/master/3.png)
 ![Screenshoot 4](https://github.com/OttoCh/WealthWarrior/blob/master/4.png)
-![Screenshoot 4](https://github.com/OttoCh/WealthWarrior/blob/master/5.png)
+![Screenshoot 5](https://github.com/OttoCh/WealthWarrior/blob/master/5.png)

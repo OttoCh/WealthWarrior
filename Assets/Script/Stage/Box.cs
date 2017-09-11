@@ -9,7 +9,7 @@ public class Box : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        BoxOpenAnim = transform.FindChild("MysBox").FindChild(BoxOpenAnimName).gameObject;
+        BoxOpenAnim = transform.Find("MysBox").Find(BoxOpenAnimName).gameObject;
         BoxOpenAnim.SetActive(false);
     }
 

@@ -4,34 +4,10 @@ using System.Collections;
 //using System.Reflection;
 using UnityStandardAssets.CrossPlatformInput;
 
-public class Player_Move : MonoBehaviour {
+public class Player_Move : Player_Schema {
 
-    class BodyPart
-    {
-        public GameObject Face;
-        public GameObject Eyebrow;
-        public GameObject Eye;
-        public GameObject FrontHair;
-        public GameObject BackHair;
-        public GameObject Torso;
-        public GameObject Mouth;
-        public GameObject Weapon;
-    }
-
-    class BodyAnimator
-    {
-        public Animator Face_Animator;
-        public Animator Eyebrow_Animator;
-        public Animator Eye_Animator;
-        public Animator FrontHair_Animator;
-        public Animator BackHair_Animator;
-        public Animator Torso_Animator;
-        public Animator Mouth_Animator;
-        public Animator Weapon_Animator;
-    }
-
-    BodyPart bodypart = new BodyPart();
-    BodyAnimator bodyanimator = new BodyAnimator();
+    public Player_Schema.BodyPart bodypart;
+    public Player_Schema.BodyAnimator bodyanimator = new Player_Schema.BodyAnimator();
     Basic_GameManager b_gm;
     GameObject charinfo_gameobj;
     CharacterInformation CharInfo;
@@ -51,13 +27,6 @@ public class Player_Move : MonoBehaviour {
 
     private bool battleMode = false;
 
-    private string Lari = "Lari";
-    private string Interract = "Interract";
-    private string Napas = "Napas";
-    private string Battle = "Battle";
-    private string Attack = "Attack";
-    private string Attacked = "Attacked";
-
     void Awake()
     {
         //load infromation about skin
@@ -69,11 +38,10 @@ public class Player_Move : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        bodypart = new Player_Schema.BodyPart(base.gameObject);
         //init all new variable
-        myBody = gameObject.GetComponent<Rigidbody2D>();
+        myBody = base.gameObject.GetComponent<Rigidbody2D>();
         //myBody = cube.GetComponent<Rigidbody2D>();
-        initBodyPartGameObject();
-        initAnim();
         initCustomPlayerInformation();
         bodypart.Weapon.SetActive(false);
         if (gameManager != null)
@@ -129,7 +97,7 @@ public class Player_Move : MonoBehaviour {
             //MoveManager();    //awalnya ini
             if (EnableMove == true) //HAPUS INI KALO CAMERA JADI KACAU
             {
-                Vector3 camPos = gameObject.transform.position;
+                Vector3 camPos = base.gameObject.transform.position;
                 camPos.y += 1;
                 cam.transform.position = camPos;
             }
@@ -172,84 +140,6 @@ public class Player_Move : MonoBehaviour {
         
 	}
 
-    public void changeAnimCond(int cond)
-    {
-        //Debug.Log(cond);
-        if (cond == 5) //attacked
-        {
-            bodyanimator.Torso_Animator.SetTrigger(Attacked);
-            bodyanimator.Face_Animator.SetTrigger(Attacked);
-            bodyanimator.Eye_Animator.SetTrigger(Attacked);
-            bodyanimator.Eyebrow_Animator.SetTrigger(Attacked);
-            bodyanimator.BackHair_Animator.SetTrigger(Attacked);
-            bodyanimator.FrontHair_Animator.SetTrigger(Attacked);
-            bodyanimator.Mouth_Animator.SetTrigger(Attacked);
-            if (bodypart.Weapon.activeInHierarchy) bodyanimator.Weapon_Animator.SetTrigger(Attacked);
-            //StartCoroutine(freezeMovementUntilAnimEnd());
-        }
-        else if (cond == 4)
-        {
-            bodyanimator.Torso_Animator.SetTrigger(Attack);
-            bodyanimator.Face_Animator.SetTrigger(Attack);
-            bodyanimator.Eye_Animator.SetTrigger(Attack);
-            bodyanimator.Eyebrow_Animator.SetTrigger(Attack);
-            bodyanimator.BackHair_Animator.SetTrigger(Attack);
-            bodyanimator.FrontHair_Animator.SetTrigger(Attack);
-            bodyanimator.Mouth_Animator.SetTrigger(Attack);
-            if (bodypart.Weapon.activeInHierarchy) bodyanimator.Weapon_Animator.SetTrigger(Attack);
-            beginInterractOrAttack(2);
-            StartCoroutine(freezeMovementUntilAnimEnd());
-        }
-        else if (cond==2)
-        {
-            bodyanimator.Torso_Animator.SetTrigger(Interract);
-            bodyanimator.Face_Animator.SetTrigger(Interract);
-            bodyanimator.Eye_Animator.SetTrigger(Interract);
-            bodyanimator.Eyebrow_Animator.SetTrigger(Interract);
-            bodyanimator.BackHair_Animator.SetTrigger(Interract);
-            bodyanimator.FrontHair_Animator.SetTrigger(Interract);
-            bodyanimator.Mouth_Animator.SetTrigger(Interract);
-            //interract
-            beginInterractOrAttack(1);
-            StartCoroutine(freezeMovementUntilAnimEnd());
-        }
-        else {
-            bodyanimator.Torso_Animator.SetInteger("cond", cond);
-            bodyanimator.Face_Animator.SetInteger("cond", cond);
-            bodyanimator.Eye_Animator.SetInteger("cond", cond);
-            bodyanimator.Eyebrow_Animator.SetInteger("cond", cond);
-            bodyanimator.BackHair_Animator.SetInteger("cond", cond);
-            bodyanimator.FrontHair_Animator.SetInteger("cond", cond);
-            bodyanimator.Mouth_Animator.SetInteger("cond", cond);
-            if (bodypart.Weapon.activeInHierarchy) bodyanimator.Weapon_Animator.SetInteger("cond", cond);
-        }
-        //bodyanimator.Weapon_Animator.SetInteger("cond", cond);
-    }
-    
-    void initAnim()
-    {
-        bodyanimator.Face_Animator = bodypart.Face.GetComponent<Animator>();
-        bodyanimator.Eyebrow_Animator = bodypart.Eyebrow.GetComponent<Animator>();
-        bodyanimator.Eye_Animator = bodypart.Eye.GetComponent<Animator>();
-        bodyanimator.BackHair_Animator = bodypart.BackHair.GetComponent<Animator>();
-        bodyanimator.FrontHair_Animator = bodypart.FrontHair.GetComponent<Animator>();
-        bodyanimator.Torso_Animator = bodypart.Torso.GetComponent<Animator>();
-        bodyanimator.Mouth_Animator = bodypart.Mouth.GetComponent<Animator>();
-        if(bodypart.Weapon.activeInHierarchy) bodyanimator.Weapon_Animator = bodypart.Weapon.GetComponent<Animator>();
-    }
-    
-    void initBodyPartGameObject()
-    {
-        bodypart.Face = gameObject.transform.Find("Face").gameObject;
-        bodypart.Eyebrow = gameObject.transform.Find("Eyebrow").gameObject;
-        bodypart.Eye = gameObject.transform.Find("Eye").gameObject;
-        bodypart.FrontHair = gameObject.transform.Find("FrontHair").gameObject;
-        bodypart.BackHair = gameObject.transform.Find("BackHair").gameObject;
-        bodypart.Torso = gameObject.transform.Find("Torso").gameObject;
-        bodypart.Mouth = gameObject.transform.Find("Mouth").gameObject;
-        bodypart.Weapon = gameObject.transform.Find("Weapon").gameObject;
-    }
-
     void MoveManager()
     {
         //ganti arah animasi
@@ -263,7 +153,8 @@ public class Player_Move : MonoBehaviour {
             {
                 if (!facingRight) flip();
             }
-            changeAnimCond(1);
+            //changeAnimCond(1);
+            bodyanimator.changeAnimCond(1, bodypart.Weapon);
             //changeAnimCond(Lari, 1);
         }
         else
@@ -273,10 +164,12 @@ public class Player_Move : MonoBehaviour {
             changeAnimCond(0);
             */
             if (!battleMode)
-                changeAnimCond(0);
+                //changeAnimCond(0);
+                bodyanimator.changeAnimCond(0, bodypart.Weapon);
                 //changeAnimCond(Napas, 1);
             else if (battleMode)
-                changeAnimCond(3);
+                //changeAnimCond(3);
+                bodyanimator.changeAnimCond(3, bodypart.Weapon);
                 //changeAnimCond(Battle, 1);
         }
     }
@@ -292,8 +185,8 @@ public class Player_Move : MonoBehaviour {
 
     public void beginInterractOrAttack(int mode)
     {
-            //logic untuk attack dan interract
-            Vector2 CollBox_WorldCoor = gameObject.transform.TransformPoint(Coll_Box.transform.localPosition);
+        //logic untuk attack dan interract
+        Vector2 CollBox_WorldCoor = base.gameObject.transform.TransformPoint(Coll_Box.transform.localPosition);
             Vector2 Pos = CollBox_WorldCoor;
             Collider2D[] hitCollider = Physics2D.OverlapCircleAll(Pos, rad);
             //masuk ke mode interract
@@ -344,6 +237,16 @@ public class Player_Move : MonoBehaviour {
         EnableMove = true;
     }
 
+    public void startCoroutine()
+    {
+        StartCoroutine(freezeMovementUntilAnimEnd());
+    }
+
+    public void changeanimcond(int cond)
+    {
+        bodyanimator.changeAnimCond(cond, bodypart.Weapon);
+    }
+
     public void movePlayer(Vector2 vel)
     {
         myBody.velocity = vel;
@@ -355,7 +258,9 @@ public class Player_Move : MonoBehaviour {
         //player kena damage
         if(!alreadyGetDamage)
         {
-            changeAnimCond(5);
+            //changeAnimCond(5);
+            bodyanimator.changeAnimCond(5, bodypart.Weapon);
+            StartCoroutine(freezeMovementUntilAnimEnd());
             Vector2 zero = new Vector2(0, 0);
             myBody.velocity = zero;
             EnableMove = false;
@@ -382,14 +287,16 @@ public class Player_Move : MonoBehaviour {
         if (!battleMode)
         {
             Coll_Box.tag = "Untagged";
-            changeAnimCond(3);
+            //changeAnimCond(3);
+            bodyanimator.changeAnimCond(3, bodypart.Weapon);
             //changeAnimCond(Battle,1);
             battleMode = true;
         }
         else
         {
             Coll_Box.tag = "Player";
-            changeAnimCond(0);
+            //changeAnimCond(0);
+            bodyanimator.changeAnimCond(0, bodypart.Weapon);
             //changeAnimCond(Napas,1);
             battleMode = false;
         }
